@@ -66,3 +66,52 @@ ON pages.page_id=page_likes.page_id
 GROUP BY pages.page_id
 HAVING COUNT(user_id)=0
 ORDER BY page_id ASC
+
+-- Mid course Test:
+----Question 1:
+-----Topic: DISTINCT
+-----Task: Tạo danh sách tất cả chi phí thay thế (replacement costs )  khác nhau của các film.
+Select distinct(replacement_cost) From Film 
+-----Question: Chi phí thay thế thấp nhất là bao nhiêu?
+Select Min(distinct(replacement_cost))From Film 
+
+----Question 2:
+-----Topic: CASE + GROUP BY
+-----Task: Viết một truy vấn cung cấp cái nhìn tổng quan về số lượng phim có chi phí thay thế trong các phạm vi chi phí sau
+-----1.	low: 9.99 - 19.99
+-----2.	medium: 20.00 - 24.99
+-----3.	high: 25.00 - 29.99
+Select 
+sum(Case WHEN Replacement_cost >=9.99 and Replacement_cost <20 THEN 1
+Else 0 END) as low,
+sum(Case WHEN Replacement_cost >=20 and Replacement_cost <24.99 THEN 1
+Else 0 END) as medium,
+sum(Case WHEN Replacement_cost >=25 THEN 1
+Else 0 END) as high
+From Film
+------Question: Có bao nhiêu phim có chi phí thay thế thuộc nhóm “low”?
+Select Sum(Case WHEN Replacement_cost >=9.99 and Replacement_cost <20 THEN 1
+Else 0 END) as low
+From Film
+
+----Question 3:
+-----Topic: Join
+-----Task: Tạo danh sách các film_title  bao gồm tiêu đề (title), độ dài (length) và tên danh mục (category_name) được sắp xếp theo độ dài giảm dần. Lọc kết quả để chỉ các phim trong danh mục 'Drama' hoặc 'Sports'.
+Select film.title, film.length,category.name as category_name
+from film
+inner join film_category on film.film_id=film_category.film_id
+inner join category on film_category.category_id=category.category_id
+WHeRE category.name in ('drama','sports')
+order by category_name asc
+
+------Question: Phim dài nhất thuộc thể loại nào và dài bao nhiêu?
+không có
+
+
+
+
+
+
+
+
+
