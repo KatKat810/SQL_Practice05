@@ -105,8 +105,87 @@ WHeRE category.name in ('drama','sports')
 order by category_name asc
 
 ------Question: Phim dài nhất thuộc thể loại nào và dài bao nhiêu?
-không có
+không có - cíu
 
+----Question 4: 
+----Topic: JOIN & GROUP BY
+----Task: Đưa ra cái nhìn tổng quan về số lượng phim (tilte) trong mỗi danh mục (category).
+  ----Question:Thể loại danh mục nào là phổ biến nhất trong số các bộ phim?
+  Select category.name as category_name,Count(film.title)
+from film
+inner join film_category on film.film_id=film_category.film_id
+inner join category on film_category.category_id=category.category_id
+Group by category_name
+order by category_name asc
+
+----Question 5:
+----Topic: JOIN & GROUP BY
+----Task:Đưa ra cái nhìn tổng quan về họ và tên của các diễn viên cũng như số lượng phim họ tham gia.
+----Question: Diễn viên nào đóng nhiều phim nhất?
+Select actor.first_name, actor.last_name, count(film_actor.film_id)
+from actor
+inner join film_Actor 
+on actor.actor_id=film_Actor.film_id
+Group by actor.first_name, actor.last_name
+Order by count(film_actor.film_id) desc
+
+----Question 6:
+----Topic: LEFT JOIN & FILTERING
+----Task: Tìm các địa chỉ không liên quan đến bất kỳ khách hàng nào.
+Select address.address, customer.customer_id from address
+Left join customer
+On customer.address_id = address.address_id
+WHERE customer.customer_id is null
+GROUP By address.address,customer.customer_id
+----Question: Có bao nhiêu địa chỉ như vậy?
+Select 
+Sum (case 
+when customer.customer_id is null then 1
+else 0 end)
+from address
+Left join customer
+On customer.address_id = address.address_id
+
+----Question 7:
+----Topic: JOIN & GROUP BY
+----Task: Danh sách các thành phố và doanh thu tương ừng trên từng thành phố 
+Select distinct (City.city), sum (payment.amount)
+from payment
+inner join customer on payment.customer_id =customer.customer_id
+Inner join address on customer.address_id=address.address_id
+inner join city on address.city_id=city.city_id
+Group by City.city
+----Question:Thành phố nào đạt doanh thu cao nhất?
+Select distinct (City.city), sum(payment.amount)
+from payment
+inner join customer on payment.customer_id =customer.customer_id
+Inner join address on customer.address_id=address.address_id
+inner join city on address.city_id=city.city_id
+Group by City.city
+Order by sum(payment.amount) desc
+limit (1)
+
+----Question 8:
+----Topic: JOIN & GROUP BY
+----Task: Tạo danh sách trả ra 2 cột dữ liệu: 
+------	cột 1: thông tin thành phố và đất nước ( format: “city, country")
+------	cột 2: doanh thu tương ứng với cột 1
+Select concat_ws(', ',City.city,country.country), sum (payment.amount)
+from payment
+inner join customer on payment.customer_id =customer.customer_id
+Inner join address on customer.address_id=address.address_id
+inner join city on address.city_id=city.city_id
+Inner join country on city.country_id=country.country_id
+Group by concat_ws(', ',City.city, country.country)
+----Question: thành phố của đất nước nào đat doanh thu cao nhất
+Select concat_ws(', ',City.city,country.country), sum (payment.amount)
+from payment
+inner join customer on payment.customer_id =customer.customer_id
+Inner join address on customer.address_id=address.address_id
+inner join city on address.city_id=city.city_id
+Inner join country on city.country_id=country.country_id
+Group by concat_ws(', ',City.city, country.country)
+Order by sum (payment.amount) asc limit 1
 
 
 
